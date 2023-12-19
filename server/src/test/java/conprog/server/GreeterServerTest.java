@@ -14,10 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Import(GreeterImpl.class)
-@SpringBootTest
+@SpringBootTest(properties = {
+        "grpc.server.inProcessName=test", // Enable inProcess server
+        "grpc.server.port=-1", // Disable external server
+        "grpc.client.inProcess.address=in-process:test" // Configure the client to connect to the inProcess server
+})
 @SpringJUnitConfig(classes = { GrpcTestConfiguration.class })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class GreeterServerTest extends GrpcTestConfiguration {
+public class GreeterServerTest {
 
     @GrpcClient("test")
     private GreeterGrpc.GreeterBlockingStub greeter;
