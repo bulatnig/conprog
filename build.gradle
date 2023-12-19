@@ -1,0 +1,63 @@
+buildscript {
+    ext {
+        grpcVersion = '1.60.0'  // https://github.com/grpc/grpc-java/releases
+        protobufVersion = '3.25.1'  // https://github.com/protocolbuffers/protobuf/releases
+        protobufGradlePluginVersion = '0.9.4'  // https://github.com/google/protobuf-gradle-plugin/releases
+        springBootVersion = '3.2.0'  // https://github.com/spring-projects/spring-boot/releases
+        grpcSpringVersion = '3.0.0-SNAPSHOT'  // https://github.com/grpc-ecosystem/grpc-spring/releases
+    }
+}
+
+plugins {
+    id 'java-library'
+    id 'org.springframework.boot' version "${springBootVersion}" apply false
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.google.protobuf' version "${protobufGradlePluginVersion}" apply false
+}
+
+subprojects {
+    group = 'conprog'
+    version = '1.0.0-SNAPSHOT'
+
+    apply plugin: 'java-library'
+    apply plugin: 'io.spring.dependency-management'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
+            mavenBom "com.google.protobuf:protobuf-bom:${protobufVersion}"
+            mavenBom "io.grpc:grpc-bom:${grpcVersion}"
+            mavenBom "org.junit:junit-bom:5.10.1"
+        }
+        dependencies {
+            dependency "net.devh:grpc-client-spring-boot-starter:$grpcSpringVersion"
+            dependency "net.devh:grpc-server-spring-boot-starter:$grpcSpringVersion"
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            // failFast = true
+            // showStandardStreams = true
+            exceptionFormat = 'full'
+            showCauses = true
+            showExceptions = true
+            showStackTraces = true
+            // prints out individual test progress by hooking into junit engine events
+            // it.events('passed', 'skipped', 'failed', 'standard_out')
+            it.events('passed', 'skipped', 'failed')
+
+            it.debug { dbg ->
+                // prints out individual test progress when run under the debugger
+                // dbg.events('started', 'failed', 'passed', 'skipped', 'standard_error', 'standard_out')
+                dbg.events('started', 'failed', 'passed', 'skipped')
+            }
+        }
+    }
+}
