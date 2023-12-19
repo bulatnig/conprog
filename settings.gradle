@@ -1,4 +1,5 @@
 rootProject.name = "conprog"
 
 include 'api'
+include 'client'
 include 'server'

@@ -1,0 +1,6 @@
+grpc:
+  client:
+    GLOBAL:
+      negotiation-type: PLAINTEXT
+    greeter:
+      address: 'static://127.0.0.1:9090'

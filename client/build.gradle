@@ -1,0 +1,22 @@
+plugins {
+    id("org.springframework.boot")
+}
+
+dependencies {
+    implementation project(':api')
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'net.devh:grpc-client-spring-boot-starter'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'net.devh:grpc-server-spring-boot-starter'
+    testImplementation 'io.grpc:grpc-testing'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
